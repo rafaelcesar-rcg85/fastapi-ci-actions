@@ -14,3 +14,4 @@ def test_somar():
     response = client.get("/somar/2/3")
     assert response.status_code == 200
     assert response.json() == {"resultado": 5}
+
