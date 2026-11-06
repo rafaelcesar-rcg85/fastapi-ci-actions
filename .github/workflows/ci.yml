@@ -9,6 +9,9 @@ on:
 jobs:
   verificar-api:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
 
     steps:
     - name: Baixar o código do repositório
@@ -17,7 +20,7 @@ jobs:
     - name: Configurar o Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: ${{ matrix.python-version }}
 
     - name: Instalar Dependências
       run: |
@@ -28,3 +31,9 @@ jobs:
       run: |
         pytest
 
+    - name: Subir a API e testar requisição (Integração)
+      run: |
+        fastapi run main.py --port 8000 &
+        sleep 3
+        curl -f http://localhost:8000/
+        curl -f http://localhost:8000/somar/10/20
